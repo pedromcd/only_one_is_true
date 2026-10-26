@@ -1,0 +1,25 @@
+# Deployment
+
+## Vercel frontend
+
+Import `pedromcd/only-one-is-true` and set the project root to `vercel`. Use the Next.js preset and Node.js 24. The app needs no environment variables with the committed API rewrite. Leave output settings at their defaults.
+
+The rewrite sends GET and POST requests for `/api/game` to the existing Cloudflare-backed game service. Requests include the player token header and JSON vote payload. Vercel hosts the interface; Cloudflare D1 remains the source of truth for every room.
+
+After deployment, open the Vercel URL in two independent browsers/devices. Create and join a room, start a game, confirm the first vote remains secret, and have the second player vote. Both screens should reveal the result before the 15-second deadline. Check that invite links use the Vercel domain.
+
+## Backend through Sites
+
+The repository root is a Vinext application configured for Cloudflare Workers. `.openai/hosting.json` declares the `DB` D1 binding without carrying the original deployment's project ID. Register this checkout as a new Site to obtain your own project identity, build it with the supplied scripts, and publish using the Sites workflow. Apply migrations through that workflow before serving requests. Keep the backend public so anonymous friends and the Vercel proxy can access the game API.
+
+## Independent Cloudflare hosting
+
+An independent deployment requires a Cloudflare account, a D1 database and a deployment configuration that binds that database as `DB`. Use the supplied Worker entry point and Vinext build integration. Apply the committed SQL migrations to the target D1 database. The repository does not include someone else's Cloudflare credentials or database ID.
+
+The generated local build configuration uses a placeholder D1 ID for local emulation. Do not treat it as a production database ID. Configure your own resources and credentials before publishing independently.
+
+After changing the backend origin, update `vercel/vercel.json`, rebuild the frontend and verify room creation, concurrent votes and invite links. Existing rooms do not move automatically to a new database.
+
+## Maintenance
+
+Keep the backend and frontend copies of the interface in sync: `app/page.tsx`, `app/layout.tsx` and `app/globals.css` correspond to the files in `vercel/app/`. Questions and game mechanics live only in the backend. Rebuilding the Vercel frontend alone will not deploy changes to the backend's question bank or rules.
