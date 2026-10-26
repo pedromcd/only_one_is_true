@@ -2,7 +2,7 @@
 
 ## Vercel frontend
 
-Import `pedromcd/only-one-is-true` and set the project root to `vercel`. Use the Next.js preset and Node.js 24. The app needs no environment variables with the committed API rewrite. Leave output settings at their defaults.
+Import `pedromcd/only_one_is_true` and set the project root to `vercel`. Use the Next.js preset and Node.js 24. The app needs no environment variables with the committed API rewrite. Leave output settings at their defaults.
 
 The rewrite sends GET and POST requests for `/api/game` to the existing Cloudflare-backed game service. Requests include the player token header and JSON vote payload. Vercel hosts the interface; Cloudflare D1 remains the source of truth for every room.
 

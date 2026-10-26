@@ -43,3 +43,9 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+
+# Vercel project state
+.vercel/
+
+# Dependency symlinks used by local development
+node_modules
